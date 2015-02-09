@@ -40,6 +40,10 @@ public class ChanUrls {
     }
 
     public static String getImageUrl(String board, String code, String extension, boolean thumb) {
+        if (thumb)
+            extension = "jpg";
+        else
+            extension = extension.toLowerCase();
         return scheme + "://8ch.net/" + board + (thumb ? "/thumb/" : "/src/") + code + "." + extension;
     }
 
