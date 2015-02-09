@@ -60,6 +60,7 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
 
     private ViewPager viewPager;
     private ImageViewAdapter imageAdapter;
+    private TwoWayView thumbList;
     private ThumbListAdapter thumbListAdapter;
     private ProgressBar progressBar;
     private ThreadManager threadManager;
@@ -136,8 +137,8 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
                 viewPager.setCurrentItem(imageIndex);
                 onPageSelected(imageIndex);
 
-                TwoWayView thumbList = (TwoWayView) findViewById(R.id.thumbList);
-                thumbListAdapter = new ThumbListAdapter(this, post.images);
+                thumbList = (TwoWayView) findViewById(R.id.thumbList);
+                thumbListAdapter = new ThumbListAdapter(this, post.images, imageIndex);
                 thumbList.setAdapter(thumbListAdapter);
                 break;
             }
@@ -184,9 +185,17 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
             fragment.onSelected(imageAdapter, position);
         }
 
-        Post post = imageAdapter.getPostFromImagePosition(position);
+        ImageViewAdapter.PostPosition postPosition = imageAdapter.imageToPostPosition(position);
         if (postAdapter != null && !threadManager.arePostRepliesOpen()) {
-            postAdapter.scrollToPost(post.no);
+            postAdapter.scrollToPost(postPosition.post.no);
+        }
+
+        if (thumbListAdapter != null) {
+            if (thumbListAdapter.getImages() != postPosition.post.images) {
+                thumbListAdapter.setImages(postPosition.post.images, position - postPosition.position);
+                thumbList.setAdapter(thumbListAdapter);
+            }
+            thumbListAdapter.setIndex(postPosition.position);
         }
     }
 
@@ -282,5 +291,9 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
         } else {
             return null;
         }
+    }
+
+    public void showImage(int i) {
+        viewPager.setCurrentItem(i);
     }
 }
