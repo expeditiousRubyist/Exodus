@@ -134,9 +134,9 @@ public class PostView extends LinearLayout implements View.OnClickListener {
 
         ta.recycle();
 
-        if (post.hasImage) {
+        if (post.images.size() > 0) {
             imageView.setVisibility(View.VISIBLE);
-            imageView.setImageUrl(post.thumbnailUrl, ChanApplication.getVolleyImageLoader());
+            imageView.setImageUrl(post.images.get(0).thumbUrl, ChanApplication.getVolleyImageLoader());
         } else {
             imageView.setVisibility(View.GONE);
             imageView.setImageUrl(null, null);
@@ -190,8 +190,8 @@ public class PostView extends LinearLayout implements View.OnClickListener {
                 text = count + " " + context.getString(R.string.one_reply);
             }
 
-            if (boardCatalogMode && post.images > 0) {
-                if (post.images != 1) {
+            if (boardCatalogMode && post.images.size() > 0) {
+                if (post.images.size() != 1) {
                     text += ", " + post.images + " " + context.getString(R.string.multiple_images);
                 } else {
                     text += ", " + post.images + " " + context.getString(R.string.one_image);

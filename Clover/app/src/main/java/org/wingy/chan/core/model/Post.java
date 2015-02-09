@@ -28,6 +28,7 @@ import org.wingy.chan.ui.view.PostView;
 import org.jsoup.parser.Parser;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -37,6 +38,38 @@ import java.util.Random;
 public class Post {
     private static final Random random = new Random();
 
+    public static class ImageData {
+        public String ext;
+        public String serverFilename;
+        public String originalFilename;
+        public int width;
+        public int height;
+        public int thumbWidth;
+        public int thumbHeight;
+        public String url;
+        public String thumbUrl;
+
+        public boolean finish(String board, boolean spoiler) {
+            if (serverFilename != null && originalFilename == null)
+                originalFilename = serverFilename;
+
+            if (serverFilename == null || ext == null || width <= 0 || height <= 0)
+                return false;
+
+            url = ChanUrls.getImageUrl(board, serverFilename, ext, false);
+            originalFilename = Parser.unescapeEntities(originalFilename, false);
+
+            if (spoiler) {
+                // TODO: Add custom spoiler support
+                thumbUrl = ChanUrls.getSpoilerUrl();
+            } else {
+                String thumbExt = ext.equals("webm") ? "jpg" : ext;
+                thumbUrl = ChanUrls.getImageUrl(board, serverFilename, thumbExt, true);
+            }
+            return true;
+        }
+    }
+
     public String board;
     public int no = -1;
     public int resto = -1;
@@ -45,17 +78,7 @@ public class Post {
     public CharSequence comment = "";
     public String subject = "";
     public long tim = -1;
-    public String ext;
-    public String serverFilename;
-    public String originalFilename;
     public int replies = -1;
-    public int imageWidth;
-    public int imageHeight;
-    public int thumbWidth;
-    public int thumbHeight;
-    public boolean hasImage = false;
-    public String thumbnailUrl;
-    public String imageUrl;
     public boolean sticky = false;
     public boolean closed = false;
     public String tripcode = "";
@@ -67,12 +90,11 @@ public class Post {
     public boolean isSavedReply = false;
     public String title = "";
     public int fileSize;
-    public int images = -1;
     public String rawComment;
     public String countryUrl;
     public boolean spoiler = false;
-
     public boolean deleted = false;
+    public List<ImageData> images = new ArrayList<ImageData>();
 
     /**
      * This post replies to the these ids
@@ -118,33 +140,17 @@ public class Post {
         if (board == null)
             return false;
 
-       if (no < 0 || resto < 0 || time < 0)
+        Iterator<ImageData> iterator = images.iterator();
+        while (iterator.hasNext()) {
+            ImageData image = iterator.next();
+           if (!image.finish(board, spoiler))
+                iterator.remove();
+        }
+
+        if (no < 0 || resto < 0 || time < 0)
             return false;
 
         isOP = resto == 0;
-
-        if (ext != null && !ext.equals("swf")) {
-            hasImage = true;
-        }
-
-        if (hasImage) {
-            if (serverFilename != null && originalFilename == null)
-                originalFilename = serverFilename;
-
-            if (serverFilename == null || ext == null || imageWidth <= 0 || imageHeight <= 0)
-                return false;
-
-            imageUrl = ChanUrls.getImageUrl(board, serverFilename, ext, false);
-            originalFilename = Parser.unescapeEntities(originalFilename, false);
-
-            if (spoiler) {
-                // TODO: Add custom spoiler support
-                thumbnailUrl = ChanUrls.getSpoilerUrl();
-            } else {
-                String thumbExt = ext.equals("webm") ? "jpg" : ext;
-                thumbnailUrl = ChanUrls.getImageUrl(board, serverFilename, thumbExt, true);
-            }
-        }
 
         if (!TextUtils.isEmpty(country)) {
             Board b = ChanApplication.getBoardManager().getBoardByValue(board);

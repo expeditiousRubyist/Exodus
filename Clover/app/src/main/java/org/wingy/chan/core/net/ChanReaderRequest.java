@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChanReaderRequest extends JsonReaderRequest<List<Post>> {
     private Loadable loadable;
@@ -63,6 +61,28 @@ public class ChanReaderRequest extends JsonReaderRequest<List<Post>> {
         request.cached = cached;
 
         return request;
+    }
+
+    private static class ImageHelper {
+        private Post post;
+        private Post.ImageData currentImage;
+
+        public ImageHelper(Post post) {
+            this.post = post;
+        }
+
+        Post.ImageData currentImage() {
+            if (currentImage == null)
+                currentImage = new Post.ImageData();
+            return currentImage;
+        }
+
+        void beginImage() {
+            if (currentImage != null && currentImage.serverFilename != null) {
+                post.images.add(currentImage);
+                currentImage = null;
+            }
+        }
     }
 
     @Override
@@ -276,6 +296,8 @@ public class ChanReaderRequest extends JsonReaderRequest<List<Post>> {
         Post post = new Post();
         post.board = loadable.board;
 
+        ImageHelper imageHelper = new ImageHelper(post);
+
         reader.beginObject();
         while (reader.hasNext()) {
             String key = reader.nextName();
@@ -296,28 +318,28 @@ public class ChanReaderRequest extends JsonReaderRequest<List<Post>> {
                     post.rawComment = reader.nextString();
                     break;
                 case "tim":
-                    post.serverFilename = reader.nextString();
+                    imageHelper.currentImage().serverFilename = reader.nextString();
                     break;
                 case "time":
                     post.time = reader.nextLong();
                     break;
                 case "ext":
-                    post.ext = reader.nextString().replace(".", "");
+                    imageHelper.currentImage().ext = reader.nextString().replace(".", "");
                     break;
                 case "resto":
                     post.resto = reader.nextInt();
                     break;
                 case "w":
-                    post.imageWidth = reader.nextInt();
+                    imageHelper.currentImage().width = reader.nextInt();
                     break;
                 case "h":
-                    post.imageHeight = reader.nextInt();
+                    imageHelper.currentImage().height = reader.nextInt();
                     break;
                 case "tn_w":
-                    post.thumbWidth = reader.nextInt();
+                    imageHelper.currentImage().thumbWidth = reader.nextInt();
                     break;
                 case "tn_h":
-                    post.thumbHeight = reader.nextInt();
+                    imageHelper.currentImage().thumbHeight = reader.nextInt();
                     break;
                 case "fsize":
                     post.fileSize = reader.nextInt();
@@ -330,11 +352,11 @@ public class ChanReaderRequest extends JsonReaderRequest<List<Post>> {
                     break;
                 case "filename":
                     try {
-                        post.originalFilename = reader.nextString();
+                        imageHelper.currentImage().originalFilename = reader.nextString();
                     } catch (Exception ex) {
                         // Sometimes 8chan returns boolean |false| for filename. |post.finish()| sets this to serverFilename.
                         reader.skipValue();
-                        post.originalFilename = null;
+                        imageHelper.currentImage().originalFilename = null;
                     }
                     break;
                 case "sticky":
@@ -358,12 +380,48 @@ public class ChanReaderRequest extends JsonReaderRequest<List<Post>> {
                 case "capcode":
                     post.capcode = reader.nextString();
                     break;
-                case "images":
-                    post.images = reader.nextInt();
-                    break;
                 case "spoiler":
                     // TODO: We never receive this... Bug the admins to add it to the API.
                     post.spoiler = reader.nextInt() == 1;
+                    break;
+                case "extra_files":
+                    reader.beginArray();
+                    while (reader.hasNext()) {
+                        reader.beginObject();
+                        imageHelper.beginImage();
+                        while (reader.hasNext()) {
+                            String extraKey = reader.nextName();
+
+                            switch (extraKey) {
+                                case "filename":
+                                    imageHelper.currentImage().originalFilename = reader.nextString();
+                                    break;
+                                case "tim":
+                                    imageHelper.currentImage().serverFilename = reader.nextString();
+                                    break;
+                                case "ext":
+                                    imageHelper.currentImage().ext = reader.nextString();
+                                    break;
+                                case "h":
+                                    imageHelper.currentImage().height = reader.nextInt();
+                                    break;
+                                case "w":
+                                    imageHelper.currentImage().width = reader.nextInt();
+                                    break;
+                                case "tn_h":
+                                    imageHelper.currentImage().thumbHeight = reader.nextInt();
+                                    break;
+                                case "tn_w":
+                                    imageHelper.currentImage().thumbWidth = reader.nextInt();
+                                    break;
+                                default:
+                                    reader.skipValue();
+                                    break;
+                            }
+                        }
+                        reader.endObject();
+                    }
+                    reader.endArray();
                     break;
                 default:
                     // Unknown/ignored key
@@ -372,6 +430,7 @@ public class ChanReaderRequest extends JsonReaderRequest<List<Post>> {
                     break;
             }
         }
+        imageHelper.beginImage();
         reader.endObject();
 
         Post cachedResult = null;

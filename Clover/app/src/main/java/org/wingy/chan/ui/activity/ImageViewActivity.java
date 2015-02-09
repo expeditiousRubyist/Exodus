@@ -113,7 +113,7 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
         // Get the posts with images
         ArrayList<Post> imagePosts = new ArrayList<>();
         for (Post post : postAdapter.getList()) {
-            if (post.hasImage) {
+            if (post.images.size() > 0) {
                 imagePosts.add(post);
             }
         }
@@ -213,8 +213,11 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
                 String name = "downloaded";
                 String filename;
                 for (Post post : adapter.getList()) {
-                    filename = (ChanPreferences.getImageSaveOriginalFilename() ? post.tim : post.originalFilename) + "." + post.ext;
-                    list.add(new ImageSaver.DownloadPair(post.imageUrl, filename));
+                    if (post.images.size() == 0)
+                        continue;
+                    Post.ImageData image = post.images.get(0);
+                    filename = (ChanPreferences.getImageSaveOriginalFilename() ? post.tim : image.originalFilename) + "." + image.ext;
+                    list.add(new ImageSaver.DownloadPair(image.url, filename));
 
                     name = post.board + "_" + post.resto;
                 }

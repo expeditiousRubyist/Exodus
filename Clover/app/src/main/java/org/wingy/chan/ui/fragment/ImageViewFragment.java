@@ -53,6 +53,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
     private ThumbnailImageView imageView;
 
     private Post post;
+    private Post.ImageData firstImage;
     private boolean showProgressBar = true;
     private boolean isVideo = false;
     private boolean videoVisible = false;
@@ -67,6 +68,8 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
     public static ImageViewFragment newInstance(Post post, ImageViewActivity activity, int index) {
         ImageViewFragment imageViewFragment = new ImageViewFragment();
         imageViewFragment.post = post;
+        if (post.images.size() > 0)
+            imageViewFragment.firstImage = post.images.get(0);
         imageViewFragment.activity = activity;
 
         return imageViewFragment;
@@ -95,7 +98,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
 
         // No restoring
         if (post != null) {
-            if (!post.hasImage) {
+            if (post.images.size() == 0) {
                 throw new IllegalArgumentException("Post has no image");
             }
 
@@ -109,7 +112,8 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
                     if (imageView.getWidth() == 0 || imageView.getHeight() == 0)
                         return;
 
-                    imageView.setThumbnail(post.thumbnailUrl);
+                    Post.ImageData image = post.images.get(0);
+                    imageView.setThumbnail(image.thumbUrl);
 
                     if (ChanPreferences.getImageAutoLoad() && !post.spoiler) {
                         load();
@@ -117,7 +121,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
                         tapToLoad = true;
                         showProgressBar(false);
 
-                        if (post.ext.equals("webm")) {
+                        if (image.ext.equals("webm")) {
                             isVideo = true;
                             activity.invalidateActionBar();
                         }
@@ -131,9 +135,9 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
         if (loaded) return;
         loaded = true;
 
-        switch (post.ext) {
+        switch (firstImage.ext) {
             case "gif":
-                imageView.setGif(post.imageUrl);
+                imageView.setGif(firstImage.url);
                 break;
             case "webm":
                 isVideo = true;
@@ -151,7 +155,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
                 }
                 break;
             default:
-                imageView.setBigImage(post.imageUrl);
+                imageView.setBigImage(firstImage.url);
                 break;
         }
 
@@ -176,7 +180,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
     public void onSelected(ImageViewAdapter adapter, int position) {
         activity.setProgressBarIndeterminateVisibility(showProgressBar);
 
-        String filename = post.originalFilename + "." + post.ext;
+        String filename = firstImage.originalFilename + "." + firstImage.ext;
         activity.getActionBar().setTitle(filename);
 
         String text = (position + 1) + "/" + adapter.getCount();
@@ -237,19 +241,19 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
                 activity.invalidateActionBar();
                 break;
             case R.id.action_open_browser:
-                Utils.openLink(context, post.imageUrl);
+                Utils.openLink(context, firstImage.url);
                 break;
             case R.id.action_image_save:
             case R.id.action_share:
-                ImageSaver.getInstance().saveImage(context, post.imageUrl,
-                        ChanPreferences.getImageSaveOriginalFilename() ? Long.toString(post.tim) : post.originalFilename, post.ext,
+                ImageSaver.getInstance().saveImage(context, firstImage.url,
+                        ChanPreferences.getImageSaveOriginalFilename() ? Long.toString(post.tim) : firstImage.originalFilename, firstImage.ext,
                         item.getItemId() == R.id.action_share);
                 break;
             default:
                 // Search if it was an ImageSearch item
                 for (ImageSearch engine : ImageSearch.engines) {
                     if (item.getItemId() == engine.getId()) {
-                        Utils.openLink(context, engine.getUrl(post.imageUrl));
+                        Utils.openLink(context, engine.getUrl(firstImage.url));
                         break;
                     }
                 }
@@ -301,7 +305,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
         if (videoVisible) return;
         videoVisible = true;
 
-        imageView.setVideo(post.imageUrl);
+        imageView.setVideo(firstImage.url);
     }
 
     public void showProgressBar(boolean e) {

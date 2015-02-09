@@ -129,8 +129,8 @@ public class PinWatcher implements Loader.LoaderListener {
     public void onData(List<Post> result, boolean append) {
         pin.isError = false;
 
-        if (pin.thumbnailUrl == null && loader.getOP() != null && loader.getOP().hasImage) {
-            pin.thumbnailUrl = loader.getOP().thumbnailUrl;
+        if (pin.thumbnailUrl == null && loader.getOP() != null && loader.getOP().images.size() > 0) {
+            pin.thumbnailUrl = loader.getOP().images.get(0).thumbUrl;
         }
 
         posts.clear();

@@ -31,6 +31,7 @@ import java.util.List;
 public class ImageViewAdapter extends FragmentStatePagerAdapter {
     private final ImageViewActivity activity;
     private final ArrayList<Post> postList = new ArrayList<>();
+    private int total_images = 0;
 
     public ImageViewAdapter(FragmentManager fragmentManager, ImageViewActivity activity) {
         super(fragmentManager);
@@ -57,6 +58,9 @@ public class ImageViewAdapter extends FragmentStatePagerAdapter {
     public void setList(ArrayList<Post> list) {
         postList.clear();
         postList.addAll(list);
+        total_images = 0;
+        for (Post post : postList)
+            total_images += post.images.size();
 
         notifyDataSetChanged();
     }

@@ -345,9 +345,10 @@ public class ThreadManager implements Loader.LoaderListener {
     private void showPostInfo(Post post) {
         String text = "";
 
-        if (post.hasImage) {
-            text += "File: " + post.originalFilename + "." + post.ext + " \nDimensions: " + post.imageWidth + "x"
-                    + post.imageHeight + "\nSize: " + Utils.getReadableFileSize(post.fileSize, false) + "\n\n";
+        if (post.images.size() > 0) {
+            Post.ImageData image = post.images.get(0);
+            text += "File: " + image.originalFilename + "." + image.ext + " \nDimensions: " + image.width + "x"
+                    + image.height + "\nSize: " + Utils.getReadableFileSize(post.fileSize, false) + "\n\n";
         }
 
         text += "Time: " + post.time; // TODO: Humanize the time

@@ -135,18 +135,14 @@ public class WatchManager implements ChanApplication.ForegroundChangedListener {
     }
 
     public boolean addPin(Post opPost) {
-        Pin pin = new Pin();
-        pin.loadable = new Loadable(opPost.board, opPost.no);
-        pin.loadable.generateTitle(opPost);
-        pin.thumbnailUrl = opPost.thumbnailUrl;
-        return addPin(pin);
+        return addPin(new Loadable(opPost.board, opPost.no), opPost);
     }
 
     public boolean addPin(Loadable loadable, Post opPost) {
         Pin pin = new Pin();
         pin.loadable = loadable;
         pin.loadable.generateTitle(opPost);
-        pin.thumbnailUrl = opPost.thumbnailUrl;
+        pin.thumbnailUrl = opPost.images.size() > 0 ? opPost.images.get(0).thumbUrl : null;
         return addPin(pin);
     }
 
