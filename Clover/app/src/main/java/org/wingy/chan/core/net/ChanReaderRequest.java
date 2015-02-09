@@ -400,7 +400,7 @@ public class ChanReaderRequest extends JsonReaderRequest<List<Post>> {
                                     imageHelper.currentImage().serverFilename = reader.nextString();
                                     break;
                                 case "ext":
-                                    imageHelper.currentImage().ext = reader.nextString();
+                                    imageHelper.currentImage().ext = reader.nextString().replace(".", "");
                                     break;
                                 case "h":
                                     imageHelper.currentImage().height = reader.nextInt();

@@ -53,7 +53,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
     private ThumbnailImageView imageView;
 
     private Post post;
-    private Post.ImageData firstImage;
+    private Post.ImageData imageData;
     private boolean showProgressBar = true;
     private boolean isVideo = false;
     private boolean videoVisible = false;
@@ -65,11 +65,11 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
     private long progressTotal;
     private boolean progressDone;
 
-    public static ImageViewFragment newInstance(Post post, ImageViewActivity activity, int index) {
+    public static ImageViewFragment newInstance(Post post, int imageIndex, ImageViewActivity activity) {
         ImageViewFragment imageViewFragment = new ImageViewFragment();
         imageViewFragment.post = post;
         if (post.images.size() > 0)
-            imageViewFragment.firstImage = post.images.get(0);
+            imageViewFragment.imageData = post.images.get(imageIndex);
         imageViewFragment.activity = activity;
 
         return imageViewFragment;
@@ -135,9 +135,9 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
         if (loaded) return;
         loaded = true;
 
-        switch (firstImage.ext) {
+        switch (imageData.ext) {
             case "gif":
-                imageView.setGif(firstImage.url);
+                imageView.setGif(imageData.url);
                 break;
             case "webm":
                 isVideo = true;
@@ -155,7 +155,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
                 }
                 break;
             default:
-                imageView.setBigImage(firstImage.url);
+                imageView.setBigImage(imageData.url);
                 break;
         }
 
@@ -180,7 +180,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
     public void onSelected(ImageViewAdapter adapter, int position) {
         activity.setProgressBarIndeterminateVisibility(showProgressBar);
 
-        String filename = firstImage.originalFilename + "." + firstImage.ext;
+        String filename = imageData.originalFilename + "." + imageData.ext;
         activity.getActionBar().setTitle(filename);
 
         String text = (position + 1) + "/" + adapter.getCount();
@@ -241,19 +241,19 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
                 activity.invalidateActionBar();
                 break;
             case R.id.action_open_browser:
-                Utils.openLink(context, firstImage.url);
+                Utils.openLink(context, imageData.url);
                 break;
             case R.id.action_image_save:
             case R.id.action_share:
-                ImageSaver.getInstance().saveImage(context, firstImage.url,
-                        ChanPreferences.getImageSaveOriginalFilename() ? Long.toString(post.tim) : firstImage.originalFilename, firstImage.ext,
+                ImageSaver.getInstance().saveImage(context, imageData.url,
+                        ChanPreferences.getImageSaveOriginalFilename() ? Long.toString(post.tim) : imageData.originalFilename, imageData.ext,
                         item.getItemId() == R.id.action_share);
                 break;
             default:
                 // Search if it was an ImageSearch item
                 for (ImageSearch engine : ImageSearch.engines) {
                     if (item.getItemId() == engine.getId()) {
-                        Utils.openLink(context, engine.getUrl(firstImage.url));
+                        Utils.openLink(context, engine.getUrl(imageData.url));
                         break;
                     }
                 }
@@ -305,7 +305,7 @@ public class ImageViewFragment extends Fragment implements ThumbnailImageViewCal
         if (videoVisible) return;
         videoVisible = true;
 
-        imageView.setVideo(firstImage.url);
+        imageView.setVideo(imageData.url);
     }
 
     public void showProgressBar(boolean e) {

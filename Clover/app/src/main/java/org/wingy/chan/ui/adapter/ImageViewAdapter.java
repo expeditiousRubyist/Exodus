@@ -38,21 +38,49 @@ public class ImageViewAdapter extends FragmentStatePagerAdapter {
         this.activity = activity;
     }
 
+    private static class PostPosition {
+        public PostPosition(Post post, int imagePosition) {
+            this.post = post;
+            this.position = imagePosition;
+        }
+
+        public Post post;
+        public int position;
+    }
+
+    private PostPosition ImageToPostPosition(int imagePosition) {
+        if (imagePosition < 0)
+            return null;
+        for (Post post : postList) {
+            if (imagePosition < post.images.size()) {
+                return new PostPosition(post, imagePosition);
+            } else {
+                imagePosition -= post.images.size();
+            }
+        }
+        return null;
+    }
+
     @Override
     public int getCount() {
-        return postList.size();
+        return total_images;
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return ImageViewFragment.newInstance(postList.get(position), activity, position);
+    public Fragment getItem(int imagePosition) {
+        PostPosition postPosition = ImageToPostPosition(imagePosition);
+        if (postPosition == null)
+            return null;
+        return ImageViewFragment.newInstance(postPosition.post, postPosition.position, activity);
     }
 
-    public Post getPost(int position) {
-        if (position < 0 || position >= getCount())
+    public Post getPostFromImagePosition(int imagePosition) {
+        if (imagePosition < 0 || imagePosition >= getCount())
             return null;
-
-        return postList.get(position);
+        PostPosition postPosition = ImageToPostPosition(imagePosition);
+        if (postPosition == null)
+            return null;
+        return postPosition.post;
     }
 
     public void setList(ArrayList<Post> list) {

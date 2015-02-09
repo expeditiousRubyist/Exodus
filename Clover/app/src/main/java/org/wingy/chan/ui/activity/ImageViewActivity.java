@@ -127,12 +127,14 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
         viewPager.setOnPageChangeListener(this);
 
         // Select the right image
-        for (int i = 0; i < imagePosts.size(); i++) {
-            if (imagePosts.get(i).no == selectedId) {
-                viewPager.setCurrentItem(i);
-                onPageSelected(i);
+        int imageIndex = 0;
+        for (Post post : imagePosts) {
+            if (post.no == selectedId) {
+                viewPager.setCurrentItem(imageIndex);
+                onPageSelected(imageIndex);
                 break;
             }
+            imageIndex += post.images.size();
         }
     }
 
@@ -175,7 +177,7 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
             fragment.onSelected(adapter, position);
         }
 
-        Post post = adapter.getPost(position);
+        Post post = adapter.getPostFromImagePosition(position);
         if (postAdapter != null && !threadManager.arePostRepliesOpen()) {
             postAdapter.scrollToPost(post.no);
         }

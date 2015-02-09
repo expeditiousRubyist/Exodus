@@ -192,9 +192,9 @@ public class PostView extends LinearLayout implements View.OnClickListener {
 
             if (boardCatalogMode && post.images.size() > 0) {
                 if (post.images.size() != 1) {
-                    text += ", " + post.images + " " + context.getString(R.string.multiple_images);
+                    text += ", " + post.images.size() + " " + context.getString(R.string.multiple_images);
                 } else {
-                    text += ", " + post.images + " " + context.getString(R.string.one_image);
+                    text += ", " + post.images.size() + " " + context.getString(R.string.one_image);
                 }
             }
 
