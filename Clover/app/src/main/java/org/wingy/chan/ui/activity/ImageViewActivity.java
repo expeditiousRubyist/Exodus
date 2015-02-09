@@ -30,6 +30,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import org.lucasr.twowayview.TwoWayView;
 import org.wingy.chan.R;
 import org.wingy.chan.chan.ImageSearch;
 import org.wingy.chan.core.ChanPreferences;
@@ -37,6 +38,7 @@ import org.wingy.chan.core.manager.ThreadManager;
 import org.wingy.chan.core.model.Post;
 import org.wingy.chan.ui.adapter.ImageViewAdapter;
 import org.wingy.chan.ui.adapter.PostAdapter;
+import org.wingy.chan.ui.adapter.ThumbListAdapter;
 import org.wingy.chan.ui.fragment.ImageViewFragment;
 import org.wingy.chan.utils.ImageSaver;
 import org.wingy.chan.utils.Logger;
@@ -57,7 +59,8 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
     private static ThreadManager threadManagerStatic;
 
     private ViewPager viewPager;
-    private ImageViewAdapter adapter;
+    private ImageViewAdapter imageAdapter;
+    private ThumbListAdapter thumbListAdapter;
     private ProgressBar progressBar;
     private ThreadManager threadManager;
 
@@ -121,9 +124,9 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
         // Setup our pages and adapter
         setContentView(R.layout.image_pager);
         viewPager = (ViewPager) findViewById(R.id.image_pager);
-        adapter = new ImageViewAdapter(getFragmentManager(), this);
-        adapter.setList(imagePosts);
-        viewPager.setAdapter(adapter);
+        imageAdapter = new ImageViewAdapter(getFragmentManager(), this);
+        imageAdapter.setList(imagePosts);
+        viewPager.setAdapter(imageAdapter);
         viewPager.setOnPageChangeListener(this);
 
         // Select the right image
@@ -132,6 +135,10 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
             if (post.no == selectedId) {
                 viewPager.setCurrentItem(imageIndex);
                 onPageSelected(imageIndex);
+
+                TwoWayView thumbList = (TwoWayView) findViewById(R.id.thumbList);
+                thumbListAdapter = new ThumbListAdapter(this, post.images);
+                thumbList.setAdapter(thumbListAdapter);
                 break;
             }
             imageIndex += post.images.size();
@@ -174,10 +181,10 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
 
         ImageViewFragment fragment = getFragment(currentPosition);
         if (fragment != null) {
-            fragment.onSelected(adapter, position);
+            fragment.onSelected(imageAdapter, position);
         }
 
-        Post post = adapter.getPostFromImagePosition(position);
+        Post post = imageAdapter.getPostFromImagePosition(position);
         if (postAdapter != null && !threadManager.arePostRepliesOpen()) {
             postAdapter.scrollToPost(post.no);
         }
@@ -190,7 +197,7 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
     public void updateActionBarIfSelected(ImageViewFragment targetFragment) {
         ImageViewFragment fragment = getFragment(currentPosition);
         if (fragment != null && fragment == targetFragment) {
-            fragment.onSelected(adapter, currentPosition);
+            fragment.onSelected(imageAdapter, currentPosition);
         }
     }
 
@@ -214,7 +221,7 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
 
                 String name = "downloaded";
                 String filename;
-                for (Post post : adapter.getList()) {
+                for (Post post : imageAdapter.getList()) {
                     if (post.images.size() == 0)
                         continue;
                     Post.ImageData image = post.images.get(0);
@@ -265,8 +272,8 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
     }
 
     private ImageViewFragment getFragment(int i) {
-        if (i >= 0 && i < adapter.getCount()) {
-            Object o = adapter.instantiateItem(viewPager, i);
+        if (i >= 0 && i < imageAdapter.getCount()) {
+            Object o = imageAdapter.instantiateItem(viewPager, i);
             if (o instanceof ImageViewFragment) {
                 return (ImageViewFragment) o;
             } else {

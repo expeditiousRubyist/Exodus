@@ -23,11 +23,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     android:background="@color/image_list_background"
     android:orientation="vertical">
 
-    <org.wingy.chan.ui.view.HackyViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/image_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </org.wingy.chan.ui.view.HackyViewPager>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <org.wingy.chan.ui.view.HackyViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/image_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+        </org.wingy.chan.ui.view.HackyViewPager>
+
+        <org.lucasr.twowayview.TwoWayView
+            android:orientation="horizontal"
+            android:id="@+id/thumbList"
+            android:layout_width="match_parent"
+            android:layout_height="@android:dimen/thumbnail_height"
+            android:drawSelectorOnTop="false"
+            android:layout_weight="1">
+        </org.lucasr.twowayview.TwoWayView>
+
+    </LinearLayout>
 </RelativeLayout>
     

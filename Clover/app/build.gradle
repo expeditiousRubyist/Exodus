@@ -68,4 +68,5 @@ dependencies {
     compile 'com.android.support:support-v13:18.0.+'
     compile 'com.koushikdutta.ion:ion:1.+'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.0.+'
+    compile 'org.lucasr.twowayview:twowayview:0.1.4'
 }
