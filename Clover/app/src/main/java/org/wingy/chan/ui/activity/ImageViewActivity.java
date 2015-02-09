@@ -140,7 +140,8 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
                 thumbList = (TwoWayView) findViewById(R.id.thumbList);
                 thumbListAdapter = new ThumbListAdapter(this, post.images, imageIndex);
                 thumbList.setAdapter(thumbListAdapter);
-                break;
+                thumbList.setVisibility(post.images.size() <= 1 ? View.GONE : View.VISIBLE);
+                return;
             }
             imageIndex += post.images.size();
         }
@@ -192,8 +193,14 @@ public class ImageViewActivity extends Activity implements ViewPager.OnPageChang
 
         if (thumbListAdapter != null) {
             if (thumbListAdapter.getImages() != postPosition.post.images) {
-                thumbListAdapter.setImages(postPosition.post.images, position - postPosition.position);
-                thumbList.setAdapter(thumbListAdapter);
+                if (postPosition.post.images.size() <= 1) {
+                    thumbList.setVisibility(View.GONE);
+                } else {
+                    thumbListAdapter.setImages(postPosition.post.images, position - postPosition.position);
+                    thumbList.setAdapter(thumbListAdapter);
+                    thumbList.setVisibility(View.VISIBLE);
+                }
+                thumbList.getParent().requestLayout();
             }
             thumbListAdapter.setIndex(postPosition.position);
         }
