@@ -57,11 +57,7 @@ public class ChanParser {
     private static final Pattern postLinkHrefPattern = Pattern.compile("/(\\w+)/res/(\\d+)\\.html#(\\d+)");
     private static final Pattern boardLinkHrefPattern = Pattern.compile("/(\\w+)/index\\.html");
 
-    private static ChanParser instance;
-
-    static {
-        instance = new ChanParser();
-    }
+    private static ChanParser instance = new ChanParser();
 
     public static ChanParser getInstance() {
         return instance;
@@ -173,7 +169,9 @@ public class ChanParser {
         CharSequence total = new SpannableString("");
 
         try {
-            String comment = commentRaw.replace("<wbr>", "");
+            String commenttemp = commentRaw.replace("<wbr>", "");
+
+            String comment = commenttemp.replaceAll("<p class=\"body-line (ltr|rtl|empty) (?:quote)?\">(.*?)</p>", "$2<br>");
 
             Document document = Jsoup.parseBodyFragment(comment);
 
