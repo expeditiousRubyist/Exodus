@@ -171,7 +171,7 @@ public class ChanParser {
         try {
             String commenttemp = commentRaw.replace("<wbr>", "");
 
-            String comment = commenttemp.replaceAll("<p class=\"body-line (ltr|empty) (quote)?\">(.*?)</p>", "$2<br>");
+            String comment = commenttemp.replaceAll("<p class=\"body-line (ltr|empty) (?:quote)?\">(.*?)</p>", "$2<br>");
 
             Document document = Jsoup.parseBodyFragment(comment);
 
