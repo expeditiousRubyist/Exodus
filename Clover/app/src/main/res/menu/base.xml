@@ -134,4 +134,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         android:showAsAction="never"
         android:title="@string/action_settings" />
 
+    <item
+        android:id="@+id/action_mod_login_logout"
+        android:orderInCategory="101"
+        android:showAsAction="never"
+        android:title="@string/action_mod_login_logout" />
 </menu>
