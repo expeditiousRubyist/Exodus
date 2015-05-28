@@ -35,6 +35,7 @@ import org.wingy.chan.core.manager.BoardManager;
 import org.wingy.chan.core.manager.LoginManager;
 import org.wingy.chan.core.manager.ReplyManager;
 import org.wingy.chan.core.manager.WatchManager;
+import org.wingy.chan.core.manager.ModManager;
 import org.wingy.chan.core.net.BitmapLruImageCache;
 import org.wingy.chan.database.DatabaseManager;
 import org.wingy.chan.utils.FileCache;
@@ -62,6 +63,7 @@ public class ChanApplication extends Application {
     private static ReplyManager replyManager;
     private static DatabaseManager databaseManager;
     private static LoginManager loginManager;
+    private static ModManager modManager;
     private static FileCache fileCache;
 
     private List<ForegroundChangedListener> foregroundChangedListeners = new ArrayList<>();
@@ -100,6 +102,8 @@ public class ChanApplication extends Application {
     }
 
     public static LoginManager getLoginManager() { return loginManager; }
+
+    public static ModManager getModManager() { return modManager; }
 
     public static FileCache getFileCache() {
         return fileCache;
@@ -153,6 +157,7 @@ public class ChanApplication extends Application {
         watchManager = new WatchManager(this);
         replyManager = new ReplyManager(this);
         loginManager = new LoginManager();
+        modManager = new ModManager();
     }
 
     public void activityEnteredForeground() {

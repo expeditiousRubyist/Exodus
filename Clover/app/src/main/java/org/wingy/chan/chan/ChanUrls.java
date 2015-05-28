@@ -95,7 +95,7 @@ public class ChanUrls {
 
     // FIXME: This may also change as the mod.php interface is changed
     public static String getModDeleteUrl(String board, int no) {
-        return getModUrl() + "/" + board + "/delete/" + no + "/";
+        return getModUrl() + "/" + board + "/delete/" + no;
     }
 
     // TODO: Implement

@@ -112,6 +112,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="post_highlight_id">Highlight ID</string>
     <string name="post_text_copied_to_clipboard">Text copied to clipboard</string>
 
+    <string name="mod_option_delete">(Mod) Delete</string>
+
     <string name="reply">Reply to</string>
     <string name="reply_to_board">Make thread in</string>
     <string name="reply_name">Name</string>

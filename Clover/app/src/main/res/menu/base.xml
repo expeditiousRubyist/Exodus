@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <item
         android:id="@+id/action_reload_tablet"
         android:icon="@drawable/ic_action_refresh"
-        android:orderInCategory="1"
         android:showAsAction="always"
         android:title="@string/action_reload">
         <menu>

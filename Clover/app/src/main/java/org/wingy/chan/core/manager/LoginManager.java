@@ -88,4 +88,6 @@ public class LoginManager {
         // TODO: Execute logout on mod.php?
         httpclient.getCookieStore().clear();
     }
+
+    public DefaultHttpClient getHttpClient() { return httpclient; }
 }
