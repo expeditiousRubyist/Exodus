@@ -288,12 +288,6 @@ public abstract class BaseActivity extends Activity implements PanelSlideListene
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
-            /* TODO: check if logged in.
-               If we are, we should just logout
-             */
-            case R.id.action_mod_login_logout:
-                startActivity(new Intent(this, LoginActivity.class));
-                return true;
         }
 
         return super.onOptionsItemSelected(item);

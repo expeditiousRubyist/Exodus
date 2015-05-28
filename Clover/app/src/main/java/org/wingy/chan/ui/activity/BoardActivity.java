@@ -523,6 +523,12 @@ public class BoardActivity extends BaseActivity implements AdapterView.OnItemSel
                 threadPane.openPane();
 
                 return true;
+            /* TODO: check if logged in.
+             * If we are, we should just logout
+             */
+            case R.id.action_mod_login_logout:
+                startActivity(new Intent(this, LoginActivity.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

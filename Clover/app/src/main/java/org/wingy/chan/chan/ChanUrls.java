@@ -86,12 +86,16 @@ public class ChanUrls {
         return scheme + "://8ch.net/" + board + "/catalog.html";
     }
 
+    // FIXME: This url will be valid until around maybe October
+    // After this time, we may be using something along the lines of
+    // 8ch.net/cp/ for "control panel"
     public static String getModUrl() {
-        return scheme + "://8ch.net/mod.php?/";
+        return scheme + "://8ch.net/mod.php?";
     }
 
+    // FIXME: This may also change as the mod.php interface is changed
     public static String getModDeleteUrl(String board, int no) {
-        return getModUrl() + board + "/delete/" + no + "/";
+        return getModUrl() + "/" + board + "/delete/" + no + "/";
     }
 
     // TODO: Implement
