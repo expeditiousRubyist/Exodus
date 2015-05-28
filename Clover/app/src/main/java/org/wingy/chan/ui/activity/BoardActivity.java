@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.util.DisplayMetrics;
@@ -521,13 +522,9 @@ public class BoardActivity extends BaseActivity implements AdapterView.OnItemSel
                 return true;
             case android.R.id.home:
                 threadPane.openPane();
-
                 return true;
-            /* TODO: check if logged in.
-             * If we are, we should just logout
-             */
             case R.id.action_mod_login_logout:
-                startActivity(new Intent(this, LoginActivity.class));
+                new LoginOrLogout().execute();
                 return true;
         }
 
@@ -778,5 +775,25 @@ public class BoardActivity extends BaseActivity implements AdapterView.OnItemSel
         public void setCustomBoard(String board) {
             this.customBoard = board;
         }
+
+    }
+
+    private class LoginOrLogout extends AsyncTask<Void, Void, Boolean> {
+        protected Boolean doInBackground(Void... nothing) {
+            return ChanApplication.getLoginManager().isLoggedIn();
+        }
+
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                ChanApplication.getLoginManager().logout();
+            }
+            else {
+                gotoLoginPage();
+            }
+        }
+    }
+
+    public void gotoLoginPage() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }

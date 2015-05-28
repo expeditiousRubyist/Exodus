@@ -63,18 +63,8 @@ public class LoginManager {
     }
 
     public boolean isLoggedIn() {
-        // If we don't think we're logged in, we definitely aren't
         if (!amLoggedIn) { return false; }
-
-        // Otherwise, we should send a request to the server to find out
-        // if our cookie is still valid
-        if (isCookieValid()) {
-            return true;
-        }
-        else {
-            amLoggedIn = false;
-            return false;
-        }
+        return isCookieValid();
     }
 
     public boolean attemptLogin(String username, String password) throws IOException {
@@ -96,5 +86,6 @@ public class LoginManager {
     public void logout() {
         amLoggedIn = false;
         // TODO: Execute logout on mod.php?
+        httpclient.getCookieStore().clear();
     }
 }

@@ -24,8 +24,7 @@ public class LoginActivity extends Activity {
             String username = loginInfo[0];
             String password = loginInfo[1];
             try {
-                Boolean result = ChanApplication.getLoginManager().attemptLogin(username, password);
-                return result;
+                return ChanApplication.getLoginManager().attemptLogin(username, password);
             }
             catch (IOException e) {
                 noConnection();
