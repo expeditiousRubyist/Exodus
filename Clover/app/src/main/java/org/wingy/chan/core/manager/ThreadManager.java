@@ -256,6 +256,7 @@ public class ThreadManager implements Loader.LoaderListener {
 
         // TODO: Make this only appear on threads in boards one has mod access to
         menu.add(Menu.NONE, 20, Menu.NONE, R.string.mod_option_delete);
+        menu.add(Menu.NONE, 21, Menu.NONE, R.string.mod_option_spoiler_images);
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -297,6 +298,9 @@ public class ThreadManager implements Loader.LoaderListener {
                         break;
                     case 20: // Delete post (mod)
                         ChanApplication.getModManager().deletePost(post.board, post.no);
+                        break;
+                    case 21: // Spoiler images (mod)
+                        ChanApplication.getModManager().spoilerImages(post.board, post.no);
                         break;
                 }
                 return false;

@@ -113,6 +113,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="post_text_copied_to_clipboard">Text copied to clipboard</string>
 
     <string name="mod_option_delete">(Mod) Delete</string>
+    <string name="mod_option_spoiler_images">(Mod) Spoiler Images</string>
 
     <string name="reply">Reply to</string>
     <string name="reply_to_board">Make thread in</string>
@@ -279,7 +280,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <string name="login_username_label">Username</string>
     <string name="login_password_label">Password</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Login as Mod</string> <!-- Previously LoginActivity -->
     <string name="login_cancel_button_name">Cancel</string>
     <string name="login_submit_button_name">Submit</string>
 </resources>

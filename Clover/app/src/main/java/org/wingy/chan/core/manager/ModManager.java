@@ -82,6 +82,53 @@ public class ModManager {
         }
     }
 
+    private class SpoilerTask extends AsyncTask<String, Void, Integer> {
+        protected Integer doInBackground(String... params) {
+            if (!loginManager.isLoggedIn()) { return 1; }
+            try {
+                // GET mod.php?/boardname/spoiler_all/postno
+                String url = ChanUrls.getModSpoilerUrl(params[0], Integer.valueOf(params[1]));
+                HttpGet httpget = new HttpGet(url);
+                HttpResponse response = httpclient.execute(httpget);
+
+                // Get redirect link
+                String responseText = responseHandler.handleResponse(response);
+                int redirectIndex = responseText.indexOf("Click to proceed to");
+                if (redirectIndex < 0) { return 2; }
+                String redirectString = responseText.substring(redirectIndex - 10, redirectIndex - 2);
+                String newurl = url + "/" + redirectString;
+
+                // Execute spoiler all
+                httpget = new HttpGet(newurl);
+                response = httpclient.execute(httpget);
+                if (response.getStatusLine().getStatusCode() == 400) { return 3; }
+
+                return 0;
+            }
+            catch (IOException e) { return 4; }
+        }
+
+        protected void onPostExecute(Integer result) {
+            switch (result) {
+                case 0: // success
+                    toastReport("All images spoilered");
+                    break;
+                case 1: // not logged in
+                    toastReport("You are not logged in");
+                    break;
+                case 2: // no redirect link
+                    toastReport("Could not find spoiler redirect link");
+                    break;
+                case 3: // not mod
+                    toastReport("Could not spoiler images (are you a mod?)");
+                    break;
+                case 4: // IOException
+                    toastReport("Cannot connect to server");
+                    break;
+            }
+        }
+    }
+
     public ModManager() {
         loginManager = ChanApplication.getLoginManager();
         httpclient = loginManager.getHttpClient();
@@ -90,6 +137,10 @@ public class ModManager {
 
     public void deletePost(String board, int no) {
         new DeleteTask().execute(board, Integer.toString(no));
+    }
+
+    public void spoilerImages(String board, int no) {
+        new SpoilerTask().execute(board, Integer.toString(no));
     }
 
     private void toastReport(String report) {

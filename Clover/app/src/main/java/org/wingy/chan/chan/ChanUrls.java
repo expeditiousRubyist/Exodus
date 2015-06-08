@@ -98,6 +98,11 @@ public class ChanUrls {
         return getModUrl() + "/" + board + "/delete/" + no;
     }
 
+    // FIXME: This may also change as the mod.php interface is changed
+    public static String getModSpoilerUrl(String board, int no) {
+        return getModUrl() + "/" + board + "/spoiler_all/" + no;
+    }
+
     // TODO: Implement
     public static String getReportUrl(String board, int no) {
         return ""; //return "https://sys.4chan.org/" + board + "/imgboard.php?mode=report&no=" + no;
