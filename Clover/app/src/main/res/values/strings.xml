@@ -114,6 +114,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <string name="mod_option_delete">(Mod) Delete</string>
     <string name="mod_option_spoiler_images">(Mod) Spoiler Images</string>
+    <string name="mod_option_ban">(Mod) Ban</string>
 
     <string name="reply">Reply to</string>
     <string name="reply_to_board">Make thread in</string>
@@ -280,9 +281,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <string name="login_username_label">Username</string>
     <string name="login_password_label">Password</string>
-    <string name="title_activity_login">Login as Mod</string> <!-- Previously LoginActivity -->
+    <string name="title_activity_login">Login as Mod</string>
     <string name="login_cancel_button_name">Cancel</string>
     <string name="login_submit_button_name">Submit</string>
+    <string name="title_activity_ban">Ban User</string>
+
+    <string name="ban_id_message">Ban user with post number</string>
+    <string name="ban_reason_hint">Reason</string>
+    <string name="ban_length_hint">Length (eg. "2d1h30m" or "2 days")</string>
+    <string name="ban_public_box_text">Public Ban</string>
+    <string name="ban_public_message_text">USER WAS BANNED FOR THIS POST</string>
+    <string name="ban_submit_button_text">New Ban</string>
+    <string name="ban_cancel_button_text">Cancel</string>
 </resources>
 
 

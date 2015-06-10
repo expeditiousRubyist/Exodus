@@ -103,6 +103,11 @@ public class ChanUrls {
         return getModUrl() + "/" + board + "/spoiler_all/" + no;
     }
 
+    // FIXME: This may also change as the mod.php interface is changed
+    public static String getModBanUrl(String board, int no) {
+        return getModUrl() + "/" + board + "/ban/" + no;
+    }
+
     // TODO: Implement
     public static String getReportUrl(String board, int no) {
         return ""; //return "https://sys.4chan.org/" + board + "/imgboard.php?mode=report&no=" + no;

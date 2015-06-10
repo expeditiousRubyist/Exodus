@@ -160,6 +160,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             android:name=".ui.activity.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+        <activity
+            android:name=".ui.activity.BanActivity"
+            android:label="@string/title_activity_ban" >
+        </activity>
     </application>
 
 </manifest>

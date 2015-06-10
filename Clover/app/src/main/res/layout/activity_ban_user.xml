@@ -1,0 +1,84 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    style="@style/AppTheme"
+    tools:context="org.wingy.chan.ui.activity.BanActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/ban_id_message"
+        android:id="@+id/banUserWithPostNumberMessage"
+        android:layout_gravity="left"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:id="@+id/banReasonField"
+        android:hint="@string/ban_reason_hint"
+        android:paddingBottom="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/banLengthField"
+        android:hint="@string/ban_length_hint"
+        android:maxLength="40"
+        android:paddingBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ban_public_box_text"
+            android:id="@+id/publicBanBox"
+            android:onClick="onPublicBanBoxClicked" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/publicBanMessage"
+            android:text="@string/ban_public_message_text"
+            android:maxLength="200"
+            android:enabled="false"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ban_submit_button_text"
+            android:id="@+id/banSubmitButton"
+            android:onClick="onBanButtonClicked"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ban_cancel_button_text"
+            android:id="@+id/banCancelButton"
+            android:onClick="onCancelButtonClicked"/>
+    </LinearLayout>
+
+</LinearLayout>

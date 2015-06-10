@@ -51,6 +51,7 @@ import org.wingy.chan.core.model.Pin;
 import org.wingy.chan.core.model.Post;
 import org.wingy.chan.core.model.PostLinkable;
 import org.wingy.chan.core.model.SavedReply;
+import org.wingy.chan.ui.activity.BanActivity;
 import org.wingy.chan.ui.activity.ReplyActivity;
 import org.wingy.chan.ui.fragment.PostRepliesFragment;
 import org.wingy.chan.ui.fragment.ReplyFragment;
@@ -257,6 +258,7 @@ public class ThreadManager implements Loader.LoaderListener {
         // TODO: Make this only appear on threads in boards one has mod access to
         menu.add(Menu.NONE, 20, Menu.NONE, R.string.mod_option_delete);
         menu.add(Menu.NONE, 21, Menu.NONE, R.string.mod_option_spoiler_images);
+        menu.add(Menu.NONE, 22, Menu.NONE, R.string.mod_option_ban);
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -301,6 +303,12 @@ public class ThreadManager implements Loader.LoaderListener {
                         break;
                     case 21: // Spoiler images (mod)
                         ChanApplication.getModManager().spoilerImages(post.board, post.no);
+                        break;
+                    case 22: // Ban (Mod)
+                        Intent intent = new Intent(activity.getApplicationContext(), BanActivity.class);
+                        intent.putExtra("board", post.board);
+                        intent.putExtra("no", post.no);
+                        activity.startActivity(intent);
                         break;
                 }
                 return false;
